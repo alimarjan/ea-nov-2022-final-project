@@ -1,7 +1,6 @@
 version: "3.9"
 networks:
   group-1-amdb-project:
-    external: true
 services:
   users-db-server:
     container_name: "users-db-server"
@@ -9,7 +8,7 @@ services:
     expose:
       - 5432
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     environment:
       POSTGRES_PASSWORD: 1234
       POSTGRES_USERNAME: "postgres"
@@ -20,7 +19,7 @@ services:
     expose:
       - 5432
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     environment:
       POSTGRES_PASSWORD: 1234
       POSTGRES_USERNAME: "postgres"
@@ -31,16 +30,27 @@ services:
     expose:
       - 5432
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     environment:
       POSTGRES_PASSWORD: 1234
       POSTGRES_USERNAME: "postgres"
       POSTGRES_DB: "comments-db"
+  movies-db-server:
+    container_name: "movies-db-server"
+    image: postgres
+    expose:
+      - 5432
+    networks:
+      - "com_group-1-amdb-project"
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USERNAME: "postgres"
+      POSTGRES_DB: "movies-db"
   config-server:
     container_name: config-server
     image: "docker.io/heritier004/ea-project:config-server"
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     expose:
       - 8888
     depends_on:
@@ -58,7 +68,7 @@ services:
     ports:
       - "8761:8761"
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     expose:
       - 8761
     depends_on:
@@ -76,7 +86,7 @@ services:
     ports:
       - "4848:4848"
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     depends_on:
       - service-discovery
       - config-server
@@ -91,7 +101,7 @@ services:
     container_name: "rabbitmq-service"
     image: rabbitmq:3.9.11-management-alpine
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     ports:
       - "15672:15672"
 
@@ -99,7 +109,7 @@ services:
     container_name: "users-service"
     image: "docker.io/heritier004/ea-project:users-service"
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     depends_on:
       - service-discovery
       - config-server
@@ -111,9 +121,9 @@ services:
       - WAIT_HOST_CONNECT_TIMEOUT=30
   series-service:
     container_name: "series-service"
-    image: "docker.io/heritier004/ea-project:series-service-local"
+    image: "docker.io/heritier004/ea-project:series-service"
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     depends_on:
       - service-discovery
       - config-server
@@ -125,13 +135,27 @@ services:
       - WAIT_HOST_CONNECT_TIMEOUT=30
   comments-service:
     container_name: "comments-service"
-    image: "docker.io/heritier004/ea-project:comments-service-local"
+    image: "docker.io/heritier004/ea-project:comments-service"
     networks:
-      - "group-1-amdb-project"
+      - "com_group-1-amdb-project"
     depends_on:
       - service-discovery
       - config-server
     entrypoint: sh -c "/wait && java -jar comments-app.jar --spring.profiles.active=docker"
+    environment:
+      - WAIT_HOSTS=service-discovery:8761, config-server:8888
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+  movies-service:
+    container_name: "movies-service"
+    image: "docker.io/heritier004/ea-project:movies-service"
+    networks:
+      - "com_group-1-amdb-project"
+    depends_on:
+      - service-discovery
+      - config-server
+    entrypoint: sh -c "/wait && java -jar movies-app.jar --spring.profiles.active=docker"
     environment:
       - WAIT_HOSTS=service-discovery:8761, config-server:8888
       - WAIT_HOSTS_TIMEOUT=300
