@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>users</artifactId>
+    <artifactId>vault-server</artifactId>
 
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
@@ -18,52 +18,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-            <version>3.1.5</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-vault-config</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>3.1.4</version>
-        </dependency>
-
-        <dependency>
-            <scope>test</scope>
-            <artifactId>spring-rabbit-test</artifactId>
-            <groupId>org.springframework.amqp</groupId>
-        </dependency>
-
-        <dependency>
-            <artifactId>spring-boot-starter-amqp</artifactId>
             <groupId>org.springframework.boot</groupId>
-        </dependency>
-
-        <dependency>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-            <groupId>org.springframework.boot</groupId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -75,4 +44,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 </project>
